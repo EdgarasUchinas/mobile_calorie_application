@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  quasar-app:
+    build:
+      context: ./quasar-project
+      dockerfile: Dockerfile
+    container_name: mobile-calorie-app
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./quasar-project:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    depends_on:
+      - api-service
+
+  api-service:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: food-recognition-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+    env_file:
+      - ./api/.env
+    restart: unless-stopped
